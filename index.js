@@ -49,6 +49,18 @@ async function run() {
       res.send({ accessToken });
     });
 
+    app.get("/inventory", async (req, res) => {
+      const query = {};
+      const cursor = productsCollection.find(query);
+      const products = await cursor.toArray();
+      res.send(products);
+    });
+    app.get("/inventory/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const product = await productsCollection.findOne(query);
+      res.send(product);
+    });
     app.get("/myItems", verifyJwt, async (req, res) => {
       const decodedEmail = req.decoded.email;
       const email = req.query.email;
